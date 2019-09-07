@@ -60,21 +60,6 @@ services:
         - com.df.port=9200
         - com.df.srcPort=9200
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION:-7.1.1}
-    hostname: "{{.Node.Hostname}}-logstash"
-    environment:
-      - XPACK_MONITORING_ELASTICSEARCH_URL=http://elasticsearch:9200
-      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME:-elastic}
-      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
-    ports:
-      - "12201:12201/udp"
-    networks:
-      - elastic
-    configs:
-      - source: ls_config
-        target: /usr/share/logstash/pipeline/logstash.conf
-
   kibana:
     image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION:-7.1.1}
     hostname: "{{.Node.Hostname}}-kibana"
@@ -102,7 +87,3 @@ networks:
 volumes:
   elasticsearch:
   kibana:
-
-configs:
-  ls_config:
-    file: $PWD/elk/logstash/config/pipeline/logstash.conf
